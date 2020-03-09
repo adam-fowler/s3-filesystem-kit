@@ -1,3 +1,3 @@
-# aws-s3-fs
+# S3 FileSystem Kit
 
-A description of this package.
+File manager for Amazon Web Service S3.
