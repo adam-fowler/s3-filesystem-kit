@@ -18,8 +18,8 @@ public enum S3FileSystemError: Error {
 public class S3FileSystem {
     /// s3 client
     let s3: S3
-    /// current folder with actions will take place
-    private(set) var currentFolder: S3Folder?
+    /// current folder where actions will take place
+    public private(set) var currentFolder: S3Folder?
     
     /// initializer
     /// - Parameter s3Client: s3 client to use
