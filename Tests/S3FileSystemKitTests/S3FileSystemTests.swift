@@ -4,7 +4,7 @@ import NIO
 import S3
 @testable import S3FileSystemKit
 
-final class awsS3FileSystemTests: XCTestCase {
+final class S3FileSystemTests: XCTestCase {
     var s3: S3!
     var s3fs: S3FileSystem!
     

@@ -1,7 +1,7 @@
 import XCTest
 
-import aws_s3_fsTests
+import S3FileSystemKitTests
 
 var tests = [XCTestCaseEntry]()
-tests += aws_s3_fsTests.allTests()
+tests += S3FileSystemKitTests.allTests()
 XCTMain(tests)
