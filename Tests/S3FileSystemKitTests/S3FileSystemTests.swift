@@ -37,7 +37,7 @@ final class awsS3FileSystemTests: XCTestCase {
             region: .euwest1,
             endpoint: ProcessInfo.processInfo.environment["S3_ENDPOINT"] ?? "http://localhost:4572"
         )
-        s3 = S3(region: .euwest1)
+        //s3 = S3(region: .euwest1)
         s3fs = S3FileSystem(s3)
     }
 
@@ -201,7 +201,7 @@ final class awsS3FileSystemTests: XCTestCase {
         return EventLoopFuture.whenAllComplete(responses, on: s3.client.eventLoopGroup.next()).map { _ in return }
     }
     
-    func testListFiles() {
+/*    func testListFiles() {
         do {
             let testData = try TestData(#function, s3fs)
             
@@ -231,7 +231,7 @@ final class awsS3FileSystemTests: XCTestCase {
         } catch {
             XCTFail("\(error)")
         }
-    }
+    }*/
     
     static var allTests = [
         ("testS3Folder", testS3Folder),
@@ -240,5 +240,10 @@ final class awsS3FileSystemTests: XCTestCase {
         ("testSubFolder", testSubFolder),
         ("testFileInFolder", testFileInFolder),
         ("testFileNameExtension", testFileNameExtension),
+        ("testFileNameExtension", testPushPopFolder),
+        ("testFileNameExtension", testBucketCreateExistsDelete),
+        ("testFileNameExtension", testBucketDoesntExist),
+        ("testFileNameExtension", testBucketDoesntExist2),
+        ("testFileNameExtension", testWriteReadFile),
     ]
 }
