@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "aws-s3-filesystem-kit",
+    name: "s3-filesystem-kit",
     products: [
-        .library(name: "AWSS3FileSystemKit", targets: ["AWSS3FileSystemKit"]),
+        .library(name: "S3FileSystemKit", targets: ["S3FileSystemKit"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swift-aws/aws-sdk-swift", .upToNextMajor(from: "4.0.0"))
     ],
     targets: [
-        .target(name: "AWSS3FileSystemKit", dependencies: ["S3"]),
-        .testTarget(name: "AWSS3FileSystemKitTests", dependencies: ["AWSS3FileSystemKit"]),
+        .target(name: "S3FileSystemKit", dependencies: ["S3"]),
+        .testTarget(name: "S3FileSystemKitTests", dependencies: ["S3FileSystemKit"]),
     ]
 )

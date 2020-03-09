@@ -2,7 +2,7 @@ import XCTest
 import Foundation
 import NIO
 import S3
-@testable import AWSS3FileSystem
+@testable import S3FileSystemKit
 
 final class awsS3FileSystemTests: XCTestCase {
     var s3: S3!
