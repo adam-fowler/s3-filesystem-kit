@@ -41,48 +41,6 @@
       "symbol": "S3FileSystemError.unexpected",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 8,
-      "symbol": "S3Path.bucket",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 9,
-      "symbol": "S3Path.path",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 26,
-      "symbol": "S3File.bucket",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 27,
-      "symbol": "S3File.path",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 67,
-      "symbol": "S3Folder.bucket",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3Path.swift",
-      "line": 68,
-      "symbol": "S3Folder.path",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
     }
   ],
   "source_directory": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit"
