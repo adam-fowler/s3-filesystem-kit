@@ -17,16 +17,16 @@ let s3fs = S3FileSystem(s3Client: s3)
 # Path descriptors
 
 S3 File System uses an `S3File` to describe the location of a file in S3 and an `S3Folder` to describe the location of a folder. These are initialized with a url of the form `s3://<bucketname>/<path>`. For example
-```
+```swift
 let folder = S3Folder(url: "s3://bucket/folder")
 let file = S3File(url: "s3://bucket2/folder/file")
 ```
 Most functions in `S3FileSystem` have two forms, one that takes an `S3File` and one that takes a filename String relative to the currentPath set in `S3FileSystem`.
-```
+```swift
 s3fs.writeFile(S3File("s3://bucket/folder/file")!, data: data)
 ```
 and
-```
+```swift
 s3fs.setCurrentFolder(S3Folder(url: "s3://bucket/folder")!)
     .flatMap { _ in
         return s3fs.writeFile(name: "file", data: data)
