@@ -4,7 +4,7 @@
 // date: 2020/03/08
 import Foundation
 import NIO
-@_exported import S3
+@_exported import AWSS3
 
 /// Errors returned from S3FileSystem
 public enum S3FileSystemError: Error {
