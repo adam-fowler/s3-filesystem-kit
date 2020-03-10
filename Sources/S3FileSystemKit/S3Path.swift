@@ -4,7 +4,7 @@
 // date: 2020/03/08
 
 /// protocol for S3Path descriptor
-public protocol S3Path {
+public protocol S3Path: Equatable {
     /// s3 bucket name
     var bucket: String { get }
     /// path inside s3 bucket. Without leading forward slash
