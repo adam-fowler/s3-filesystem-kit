@@ -18,7 +18,7 @@ public enum S3FileSystemError: Error {
 /// S3 file system object. Contains S3 access functions
 public class S3FileSystem {
     
-    /// attributes that can be set at point file is written
+    /// Attributes that can be set at point file is written
     public struct WriteFileAttributes {
         /// Specifies what content encodings have been applied to the object
         public let contentEncoding: String?
@@ -35,7 +35,7 @@ public class S3FileSystem {
         }
     }
     
-    /// attributes of file already uploaded to S3
+    /// Attributes of file already uploaded to S3
     public struct FileAttributes {
         /// An ETag is an opaque identifier
         public let eTag: String?
@@ -49,7 +49,7 @@ public class S3FileSystem {
         public let contentType: String?
     }
     
-    /// attributes of file returned by ListObjects
+    /// Attributes of file returned by ListObjects
     public struct FileListAttributes {
         /// S3 file
         public let file: S3File
