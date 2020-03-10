@@ -16,10 +16,15 @@ public enum S3FileSystemError: Error {
 
 /// S3 file system object
 public class S3FileSystem {
+    
+    //MARK: Member variables
+    
     /// s3 client
     let s3: S3
     /// current folder where actions will take place
     public private(set) var currentFolder: S3Folder?
+    
+    //MARK: Initializer
     
     /// initializer
     /// - Parameter s3Client: s3 client to use
@@ -27,6 +32,8 @@ public class S3FileSystem {
         self.s3 = s3Client
         self.currentFolder = nil
     }
+    
+    //MARK: Member functions
     
     /// Set current folder to work from. When you call this function it will verify the bucket in the path exists or create it you require that
     /// - Parameters:

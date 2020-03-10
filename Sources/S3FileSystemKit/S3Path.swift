@@ -5,12 +5,14 @@
 
 /// protocol for S3Path descriptor
 public protocol S3Path {
+    /// s3 bucket name
     var bucket: String { get }
+    /// path inside s3 bucket
     var path: String { get }
 }
 
 public extension S3Path {
-    /// return in URL form "s3://<bucketname>/<path>"
+    /// return in URL form `s3://<bucketname>/<path>`
     var url: String { return "s3://\(bucket)\(path)"}
     
     /// return parent folder
@@ -23,7 +25,9 @@ public extension S3Path {
 
 /// S3 file descriptor
 public struct S3File: S3Path {
+    /// s3 bucket name
     public let bucket: String
+    /// path inside s3 bucket
     public let path: String
 
     internal init(bucket: String, path: String) {
@@ -32,7 +36,7 @@ public struct S3File: S3Path {
     }
 
     /// initialiizer
-    /// - Parameter url: Construct file descriptor from url of form "s3://<bucketname>/<path>"
+    /// - Parameter url: Construct file descriptor from url of form `s3://<bucketname>/<path>`
     public init?(url: String) {
         guard url.hasPrefix("s3://") || url.hasPrefix("S3://") else { return nil }
         guard !url.hasSuffix("/") else { return nil }
@@ -64,7 +68,9 @@ public struct S3File: S3Path {
 
 /// S3 folder descriptor
 public struct S3Folder: S3Path {
+    /// s3 bucket name
     public let bucket: String
+    /// path inside s3 bucket
     public let path: String
 
     internal init(bucket: String, path: String) {
