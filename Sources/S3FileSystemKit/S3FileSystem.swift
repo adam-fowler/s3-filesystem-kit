@@ -264,7 +264,7 @@ public class S3FileSystem {
     public func listBuckets() -> EventLoopFuture<[S3Folder]> {
         return s3.listBuckets()
             .map { buckets in
-                return buckets.buckets?.compactMap { S3Folder(url: "s3://\($0)/") } ?? []
+                return buckets.buckets?.compactMap { bucket in bucket.name.map { S3Folder(url: "s3://\($0)/")! } } ?? []
             }
             .flatMapErrorThrowing { error in
                 throw self.convertS3Errors(error)

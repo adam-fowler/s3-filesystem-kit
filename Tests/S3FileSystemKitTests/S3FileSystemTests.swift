@@ -157,6 +157,16 @@ final class S3FileSystemTests: XCTestCase {
         }
     }
     
+    func testListBuckets() {
+        do {
+            let testData = try TestData(#function, s3fs)
+            let buckets = try s3fs.listBuckets().wait()
+            XCTAssertNotNil(buckets.first { $0 == S3Folder(url: "s3://\(testData.bucket)/")!})
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
     func testWriteReadFile() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -282,6 +292,7 @@ final class S3FileSystemTests: XCTestCase {
         ("testBucketCreateExistsDelete", testBucketCreateExistsDelete),
         ("testBucketDoesntExist", testBucketDoesntExist),
         ("testBucketDoesntExist2", testBucketDoesntExist2),
+        ("testListBuckets", testListBuckets),
         ("testWriteReadFile", testWriteReadFile),
         ("testFileSize", testFileSize),
         ("testFileAttributes", testFileAttributes),
