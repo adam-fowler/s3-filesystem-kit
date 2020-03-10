@@ -178,7 +178,7 @@ public class S3FileSystem {
     /// - Parameter from: source file name
     /// - Parameter to: destination file name
     public func copyFile(from: S3File, to: S3File) -> EventLoopFuture<Void> {
-        let request = S3.CopyObjectRequest(bucket: to.bucket, copySource: "\(from.bucket)/\(from.path)", key: to.path)
+        let request = S3.CopyObjectRequest(bucket: to.bucket, copySource: "/\(from.bucket)/\(from.path)", key: to.path)
         return s3.copyObject(request)
             .map { _ in return }
             .flatMapErrorThrowing { error in

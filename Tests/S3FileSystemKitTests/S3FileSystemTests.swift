@@ -15,7 +15,10 @@ final class S3FileSystemTests: XCTestCase {
         init(_ testName: String, _ s3fs: S3FileSystem) throws {
             self.s3fs = s3fs
             self.bucket = "s3fs-\(testName.lowercased().filter { return $0.isLetter })"
-            try s3fs.createBucket(bucketName: bucket).wait()
+            try s3fs.createBucket(bucketName: bucket)
+                .flatMapErrorThrowing { _ in return }
+                .flatMap { _ in s3fs.setCurrentFolder(S3Folder(url: "s3://\(self.bucket)")!) }
+                .wait()
         }
         
         deinit {
@@ -228,6 +231,24 @@ final class S3FileSystemTests: XCTestCase {
             let list3 = try s3fs.listFiles(includeSubFolders: true).wait()
             XCTAssertEqual(list3.count, 13)
 
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testCopyFiles() {
+        do {
+            let testData = try TestData(#function, s3fs)
+
+            let from = S3File(url: "s3://\(testData.bucket)/folder1/testObject.txt")!
+            let to = S3File(url: "s3://\(testData.bucket)/folder2/testObject.txt")!
+            
+            let data = Data("Test string".utf8)
+            try s3fs.writeFile(from, data: data).wait()
+            try s3fs.copyFile(from: from, to: to).wait()
+            let data2 = try s3fs.readFile(to).wait()
+            
+            XCTAssertEqual(data, data2)
         } catch {
             XCTFail("\(error)")
         }
