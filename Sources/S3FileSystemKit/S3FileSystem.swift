@@ -260,6 +260,17 @@ public class S3FileSystem {
 
     }
 
+    /// Return a list of S3 buckets as S3Folders
+    public func listBuckets() -> EventLoopFuture<[S3Folder]> {
+        return s3.listBuckets()
+            .map { buckets in
+                return buckets.buckets?.compactMap { S3Folder(url: "s3://\($0)/") } ?? []
+            }
+            .flatMapErrorThrowing { error in
+                throw self.convertS3Errors(error)
+        }
+    }
+    
     /// Return if an S3  bucket exists
     /// - Parameter bucketName: name of bucket
     public func doesBucketExist(bucketName: String) -> EventLoopFuture<Bool> {
