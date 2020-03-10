@@ -278,11 +278,14 @@ final class S3FileSystemTests: XCTestCase {
         ("testSubFolder", testSubFolder),
         ("testFileInFolder", testFileInFolder),
         ("testFileNameExtension", testFileNameExtension),
-        ("testFileNameExtension", testPushPopFolder),
-        ("testFileNameExtension", testBucketCreateExistsDelete),
-        ("testFileNameExtension", testBucketDoesntExist),
-        ("testFileNameExtension", testBucketDoesntExist2),
-        ("testFileNameExtension", testWriteReadFile),
-        ("testListFiles", testListFiles)
+        ("testPushPopFolder", testPushPopFolder),
+        ("testBucketCreateExistsDelete", testBucketCreateExistsDelete),
+        ("testBucketDoesntExist", testBucketDoesntExist),
+        ("testBucketDoesntExist2", testBucketDoesntExist2),
+        ("testWriteReadFile", testWriteReadFile),
+        ("testFileSize", testFileSize),
+        ("testFileAttributes", testFileAttributes),
+        ("testListFiles", testListFiles),
+        ("testCopyFiles", testCopyFiles),
     ]
 }
