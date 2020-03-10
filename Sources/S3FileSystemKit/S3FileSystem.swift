@@ -4,8 +4,9 @@
 // date: 2020/03/08
 import Foundation
 import NIO
-import S3
+@_exported import S3
 
+/// Errors returned from S3FileSystem
 public enum S3FileSystemError: Error {
     case invalidAction
     case accessDenied
@@ -14,14 +15,14 @@ public enum S3FileSystemError: Error {
     case unexpected
 }
 
-/// S3 file system object
+/// S3 file system object. Contains S3 access functions
 public class S3FileSystem {
     
     //MARK: Member variables
     
-    /// s3 client
+    /// S3 client
     let s3: S3
-    /// current folder where actions will take place
+    /// Current folder where actions will take place
     public private(set) var currentFolder: S3Folder?
     
     //MARK: Initializer
@@ -38,7 +39,7 @@ public class S3FileSystem {
     /// Set current folder to work from. When you call this function it will verify the bucket in the path exists or create it you require that
     /// - Parameters:
     ///   - folder: S3 folder descriptor
-    ///   - createBucket: Create bucket if it doesnt exist
+    ///   - createBucket: Create S3 bucket if it doesnt exist
     public func setCurrentFolder(_ folder: S3Folder, createBucket: Bool = false) -> EventLoopFuture<Void> {
         let bucketFuture: EventLoopFuture<Void>
         if createBucket {
