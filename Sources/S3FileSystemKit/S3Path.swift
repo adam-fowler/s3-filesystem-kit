@@ -4,7 +4,7 @@
 // date: 2020/03/08
 
 /// protocol for S3Path descriptor
-public protocol S3Path: Equatable {
+public protocol S3Path: Equatable, CustomStringConvertible {
     /// s3 bucket name
     var bucket: String { get }
     /// path inside s3 bucket. Without leading forward slash
@@ -22,6 +22,9 @@ public extension S3Path {
         guard let slash: String.Index = path.lastIndex(of: "/") else { return S3Folder(bucket: bucket, path: "") }
         return S3Folder(bucket: bucket, path: String(path[path.startIndex...slash]))
     }
+    
+    /// CustomStringConvertible protocol requirement
+    var description: String { return url }
 }
 
 /// S3 file descriptor
