@@ -166,6 +166,27 @@ public class S3FileSystem {
 
     }
     
+    /// Copy file
+    /// - Parameter from: source file name in current folder
+    /// - Parameter to: destination file name
+    public func copyFile(from: String, to: S3File) -> EventLoopFuture<Void> {
+        guard let file = currentFolder?.file(from) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return copyFile(from: file, to: to)
+    }
+    
+    /// Copy file
+    /// - Parameter from: source file name
+    /// - Parameter to: destination file name
+    public func copyFile(from: S3File, to: S3File) -> EventLoopFuture<Void> {
+        let request = S3.CopyObjectRequest(bucket: to.bucket, copySource: "\(from.bucket)/\(from.path)", key: to.path)
+        return s3.copyObject(request)
+            .map { _ in return }
+            .flatMapErrorThrowing { error in
+                throw self.convertS3Errors(error)
+        }
+
+    }
+    
     /// Get file size
     /// - Parameter name: file name in current folder
     public func getFileSize(name: String) -> EventLoopFuture<Int64> {
@@ -250,7 +271,7 @@ extension S3FileSystem {
         guard let currentFolder = currentFolder else { return makeFailedFuture(S3FileSystemError.invalidAction) }
         let delimiter: String? = includeSubFolders ? nil : "/"
         var keys: [S3Path] = []
-        let request = S3.ListObjectsV2Request(bucket: currentFolder.bucket, delimiter: delimiter, prefix: currentFolder.path.removingPrefix("/"))
+        let request = S3.ListObjectsV2Request(bucket: currentFolder.bucket, delimiter: delimiter, prefix: currentFolder.path)
         return s3.listObjectsV2Paginator(request) { response, eventLoop in
             keys.append(contentsOf: collate(response))
             return eventLoop.makeSucceededFuture(true)

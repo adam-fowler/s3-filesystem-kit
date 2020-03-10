@@ -50,15 +50,15 @@ final class S3FileSystemTests: XCTestCase {
         let folder6 = S3Folder(url: "S4://my-bucket/folder/folder2")
 
         XCTAssertEqual(folder1?.bucket, "my-bucket")
-        XCTAssertEqual(folder1?.path, "/")
+        XCTAssertEqual(folder1?.path, "")
         XCTAssertEqual(folder2?.bucket, "my-bucket")
-        XCTAssertEqual(folder2?.path, "/")
+        XCTAssertEqual(folder2?.path, "")
         XCTAssertEqual(folder3?.bucket, "my-bucket")
-        XCTAssertEqual(folder3?.path, "/folder/")
+        XCTAssertEqual(folder3?.path, "folder/")
         XCTAssertEqual(folder4?.bucket, "my-bucket")
-        XCTAssertEqual(folder4?.path, "/folder/")
+        XCTAssertEqual(folder4?.path, "folder/")
         XCTAssertEqual(folder5?.bucket, "my-bucket")
-        XCTAssertEqual(folder5?.path, "/folder/folder2/")
+        XCTAssertEqual(folder5?.path, "folder/folder2/")
         XCTAssertNil(folder6)
     }
 
@@ -68,9 +68,9 @@ final class S3FileSystemTests: XCTestCase {
         let file3 = S3File(url: "s3://my-bucket/file/")
 
         XCTAssertEqual(file1?.bucket, "my-bucket")
-        XCTAssertEqual(file1?.path, "/file")
+        XCTAssertEqual(file1?.path, "file")
         XCTAssertEqual(file2?.bucket, "my-bucket")
-        XCTAssertEqual(file2?.path, "/folder/file")
+        XCTAssertEqual(file2?.path, "folder/file")
         XCTAssertNil(file3)
     }
 
@@ -201,7 +201,7 @@ final class S3FileSystemTests: XCTestCase {
         return EventLoopFuture.whenAllComplete(responses, on: s3.client.eventLoopGroup.next()).map { _ in return }
     }
     
-/*    func testListFiles() {
+    func testListFiles() {
         do {
             let testData = try TestData(#function, s3fs)
             
@@ -231,7 +231,7 @@ final class S3FileSystemTests: XCTestCase {
         } catch {
             XCTFail("\(error)")
         }
-    }*/
+    }
     
     static var allTests = [
         ("testS3Folder", testS3Folder),
@@ -245,5 +245,6 @@ final class S3FileSystemTests: XCTestCase {
         ("testFileNameExtension", testBucketDoesntExist),
         ("testFileNameExtension", testBucketDoesntExist2),
         ("testFileNameExtension", testWriteReadFile),
+        ("testListFiles", testListFiles)
     ]
 }

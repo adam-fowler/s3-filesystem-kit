@@ -7,19 +7,20 @@
 public protocol S3Path {
     /// s3 bucket name
     var bucket: String { get }
-    /// path inside s3 bucket
+    /// path inside s3 bucket. Without leading forward slash
     var path: String { get }
 }
 
 public extension S3Path {
     /// return in URL form `s3://<bucketname>/<path>`
-    var url: String { return "s3://\(bucket)\(path)"}
+    var url: String { return "s3://\(bucket)/\(path)"}
     
     /// return parent folder
     func parent() -> S3Folder? {
         let path = self.path.removingSuffix("/")
-        guard let slash: String.Index = path.lastIndex(of: "/") else { return nil }
-        return S3Folder(bucket: bucket, path: String(path[path.startIndex..<slash]))
+        guard path.count > 0 else { return nil }
+        guard let slash: String.Index = path.lastIndex(of: "/") else { return S3Folder(bucket: bucket, path: "") }
+        return S3Folder(bucket: bucket, path: String(path[path.startIndex...slash]))
     }
 }
 
@@ -32,7 +33,7 @@ public struct S3File: S3Path {
 
     internal init(bucket: String, path: String) {
         self.bucket = bucket
-        self.path = path
+        self.path = path.removingPrefix("/")
     }
 
     /// initialiizer
@@ -75,18 +76,18 @@ public struct S3Folder: S3Path {
 
     internal init(bucket: String, path: String) {
         self.bucket = bucket
-        self.path = path.appendingPrefixIfNeeded("/").appendingSuffixIfNeeded("/")
+        self.path = path.appendingSuffixIfNeeded("/").removingPrefix("/")
     }
 
     /// initialiizer
     /// - Parameter url: Construct folder descriptor from url of form `s3://<bucketname>/<path>`
     public init?(url: String) {
         guard url.hasPrefix("s3://") || url.hasPrefix("S3://") else { return nil }
-        let path = String(url.dropFirst(5)).appendingSuffixIfNeeded("/")
+        let path = String(url.dropFirst(5))
         if let slash = path.firstIndex(of: "/") {
             self.init(bucket: String(path[path.startIndex..<slash]), path: String(path[slash..<path.endIndex]))
         } else {
-            self.init(bucket: path, path: "/")
+            self.init(bucket: path, path: "")
         }
     }
     
@@ -107,7 +108,7 @@ public struct S3Folder: S3Path {
 }
 
 
-internal extension String {
+private extension String {
     func removingPrefix(_ prefix: String) -> String {
         guard hasPrefix(prefix) else { return self }
         return String(dropFirst(prefix.count))
