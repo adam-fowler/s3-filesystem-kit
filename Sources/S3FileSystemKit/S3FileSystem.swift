@@ -18,6 +18,49 @@ public enum S3FileSystemError: Error {
 /// S3 file system object. Contains S3 access functions
 public class S3FileSystem {
     
+    /// attributes that can be set at point file is written
+    public struct WriteFileAttributes {
+        /// Specifies what content encodings have been applied to the object
+        public let contentEncoding: String?
+        /// A standard MIME type describing the format of the contents
+        public let contentType: String?
+        /// The tag-set for the object
+        public let tags: [String: String]?
+        
+        /// initializer
+        public init(contentEncoding: String? = nil, contentType: String? = nil, tags: [String: String]? = nil) {
+            self.contentEncoding = contentEncoding
+            self.contentType = contentType
+            self.tags = tags
+        }
+    }
+    
+    /// attributes of file already uploaded to S3
+    public struct FileAttributes {
+        /// An ETag is an opaque identifier
+        public let eTag: String?
+        /// File size
+        public let size: Int64?
+        /// Last modified date of the object
+        public let lastModified: Date?
+        /// Specifies what content encodings have been applied to the object
+        public let contentEncoding: String?
+        /// A standard MIME type describing the format of the contents
+        public let contentType: String?
+    }
+    
+    /// attributes of file returned by ListObjects
+    public struct FileListAttributes {
+        /// S3 file
+        public let file: S3File
+        /// An ETag is an opaque identifier
+        public let eTag: String?
+        /// File size
+        public let size: Int64?
+        /// Last modified date of the object
+        public let lastModified: Date?
+    }
+    
     //MARK: Member variables
     
     /// S3 client
@@ -74,15 +117,14 @@ public class S3FileSystem {
     
     /// List files in current folder
     /// - Parameter includeSubFolders: should files in subfolders be included in the list
-    public func listFiles(includeSubFolders: Bool = false) -> EventLoopFuture<[S3File]> {
+    public func listFiles(includeSubFolders: Bool = false) -> EventLoopFuture<[FileListAttributes]> {
         guard let currentFolder = currentFolder else { return makeFailedFuture(S3FileSystemError.invalidAction) }
         return list(includeSubFolders: includeSubFolders) { response in
             guard let contents = response.contents else { return [] }
-            return contents.compactMap {
-                return $0.key != nil ? S3File(bucket: currentFolder.bucket, path: $0.key!) : nil
+            return contents.compactMap { entry in
+                guard let key = entry.key else { return nil }
+                return FileListAttributes(file: S3File(bucket: currentFolder.bucket, path: key), eTag: entry.eTag, size: entry.size, lastModified: entry.lastModified?.dateValue)
             }
-        }.map { paths in
-            return paths.compactMap { $0 as? S3File }
         }
     }
     
@@ -94,8 +136,6 @@ public class S3FileSystem {
             return subFolders.compactMap {
                 return $0.prefix != nil ? S3Folder(bucket: currentFolder.bucket, path: $0.prefix!) : nil
             }
-        }.map { paths in
-            return paths.compactMap { $0 as? S3Folder }
         }
     }
     
@@ -129,17 +169,24 @@ public class S3FileSystem {
     /// - Parameters:
     ///   - name: file name in current folder
     ///   - data: data to be written to file
-    public func writeFile(name: String, data: Data) -> EventLoopFuture<Void> {
+    public func writeFile(name: String, data: Data, attributes: WriteFileAttributes? = nil) -> EventLoopFuture<Void> {
         guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
-        return writeFile(file, data: data)
+        return writeFile(file, data: data, attributes: attributes)
     }
     
     /// Write data to file
     /// - Parameters:
     ///   - file: s3 file descriptor
     ///   - data: data to be written to file
-    public func writeFile(_ file: S3File, data: Data) -> EventLoopFuture<Void> {
-        let request = S3.PutObjectRequest(body: data, bucket: file.bucket, key: file.path)
+    public func writeFile(_ file: S3File, data: Data, attributes: WriteFileAttributes? = nil) -> EventLoopFuture<Void> {
+        let request = S3.PutObjectRequest(
+            body: data,
+            bucket: file.bucket,
+            contentEncoding: attributes?.contentEncoding,
+            contentType: attributes?.contentType,
+            key: file.path,
+            tagging: attributes?.tags?.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+        )
         return s3.putObject(request)
             .map { _ in return }
             .flatMapErrorThrowing { error in
@@ -187,20 +234,25 @@ public class S3FileSystem {
 
     }
     
-    /// Get file size
+    /// Get file attributes
     /// - Parameter name: file name in current folder
-    public func getFileSize(name: String) -> EventLoopFuture<Int64> {
+    public func getFileAttributes(name: String) -> EventLoopFuture<FileAttributes> {
         guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
-        return getFileSize(file)
+        return getFileAttributes(file)
     }
     
-    /// Get file size
+    /// Get file attributes
     /// - Parameter file: s3 file descriptor
-    public func getFileSize(_ file: S3File) -> EventLoopFuture<Int64> {
+    public func getFileAttributes(_ file: S3File) -> EventLoopFuture<FileAttributes> {
         let request = S3.HeadObjectRequest(bucket: file.bucket, key: file.path)
         return s3.headObject(request)
             .map { response in
-                return response.contentLength ?? 0
+                return FileAttributes(
+                    eTag: response.eTag,
+                    size: response.contentLength,
+                    lastModified: response.lastModified?.dateValue,
+                    contentEncoding: response.contentEncoding,
+                    contentType: response.contentType)
             }
             .flatMapErrorThrowing { error in
                 throw self.convertS3Errors(error)
@@ -245,7 +297,9 @@ public class S3FileSystem {
     
 }
 
-extension S3FileSystem {
+/// Internal functionality
+internal extension S3FileSystem {
+    /// test if bucket exists, return failed EventLoopFuture is not
     func headBucket(bucketName: String) -> EventLoopFuture<Void> {
         let request = S3.HeadBucketRequest(bucket: bucketName)
         return s3.headBucket(request)
@@ -255,6 +309,7 @@ extension S3FileSystem {
         }
     }
     
+    /// convert from aws-sdk-swift S3 error to s3-filesystem error
     func convertS3Errors(_ error: Error) -> Error {
         switch error {
         case S3ErrorType.noSuchBucket:
@@ -267,10 +322,12 @@ extension S3FileSystem {
         }
     }
     
-    func list(includeSubFolders: Bool = false, _ collate: @escaping (S3.ListObjectsV2Output) -> [S3Path]) -> EventLoopFuture<[S3Path]> {
+    /// list objects and apply collation function to them
+    func list<T>(includeSubFolders: Bool = false, _ collate: @escaping (S3.ListObjectsV2Output) -> [T]) -> EventLoopFuture<[T]> {
         guard let currentFolder = currentFolder else { return makeFailedFuture(S3FileSystemError.invalidAction) }
         let delimiter: String? = includeSubFolders ? nil : "/"
-        var keys: [S3Path] = []
+        var keys: [T] = []
+        
         let request = S3.ListObjectsV2Request(bucket: currentFolder.bucket, delimiter: delimiter, prefix: currentFolder.path)
         return s3.listObjectsV2Paginator(request) { response, eventLoop in
             keys.append(contentsOf: collate(response))
@@ -282,7 +339,7 @@ extension S3FileSystem {
         }
     }
     
-
+    /// make a failed future
     func makeFailedFuture<T>(_ error: Error) -> EventLoopFuture<T> {
         return s3.client.eventLoopGroup.next().makeFailedFuture(error)
     }

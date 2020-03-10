@@ -25,7 +25,7 @@ final class S3FileSystemTests: XCTestCase {
             try? s3fs.setCurrentFolder("/")
             let fileDeletion: EventLoopFuture<Void> = s3fs.listFiles(includeSubFolders: true)
                 .flatMap { files in
-                    let deleteFutures = files.map { self.s3fs.deleteFile($0) }
+                    let deleteFutures = files.map { self.s3fs.deleteFile($0.file) }
                     return EventLoopFuture.whenAllComplete(deleteFutures, on: self.s3fs.s3.client.eventLoopGroup.next()).map { _ in return }
             }
             try? fileDeletion.wait()
@@ -183,10 +183,27 @@ final class S3FileSystemTests: XCTestCase {
                 .flatMap { _ in
                     return self.s3fs.writeFile(name: "testfile", data: data)
                 }.flatMap { _ in
-                    return self.s3fs.getFileSize(name: "testfile")
+                    return self.s3fs.getFileAttributes(name: "testfile")
             }
             let result = try future.wait()
-            XCTAssertEqual(result, 12)
+            XCTAssertEqual(result.size, 12)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testFileAttributes() {
+        do {
+            let testData = try TestData(#function, s3fs)
+            let data = Data("My test data".utf8)
+            let future = s3fs.setCurrentFolder(S3Folder(url: "s3://\(testData.bucket)/folder")!)
+                .flatMap { _ in
+                    return self.s3fs.writeFile(name: "testfile", data: data, attributes: .init(contentType: "text/plain"))
+                }.flatMap { _ in
+                    return self.s3fs.getFileAttributes(name: "testfile")
+            }
+            let result = try future.wait()
+            XCTAssertEqual(result.contentType, "text/plain")
         } catch {
             XCTFail("\(error)")
         }
