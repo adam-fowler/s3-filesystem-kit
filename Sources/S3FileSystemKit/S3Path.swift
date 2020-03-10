@@ -79,7 +79,7 @@ public struct S3Folder: S3Path {
     }
 
     /// initialiizer
-    /// - Parameter url: Construct folder descriptor from url of form "s3://<bucketname>/<path>"
+    /// - Parameter url: Construct folder descriptor from url of form `s3://<bucketname>/<path>`
     public init?(url: String) {
         guard url.hasPrefix("s3://") || url.hasPrefix("S3://") else { return nil }
         let path = String(url.dropFirst(5)).appendingSuffixIfNeeded("/")
