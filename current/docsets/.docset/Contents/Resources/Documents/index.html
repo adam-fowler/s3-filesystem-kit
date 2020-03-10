@@ -13,7 +13,7 @@
     <a title="  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (88% documented)</p>
+        <p><a href="index.html"> Docs</a> (92% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -31,6 +31,15 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="Classes/S3FileSystem.html">S3FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/S3FileSystem/WriteFileAttributes.html">– WriteFileAttributes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/S3FileSystem/FileAttributes.html">– FileAttributes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/S3FileSystem/FileListAttributes.html">– FileListAttributes</a>
               </li>
             </ul>
           </li>
@@ -67,9 +76,55 @@
         <section>
           <section class="section">
             
-            <h1 id='s3-filesystem-kit' class='heading'>S3 FileSystem Kit</h1>
+            <h1 id='s3-file-system-kit' class='heading'>S3 File System Kit</h1>
+
+<p><a href="https://swift.org"><img src="http://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1" /></a>
+<a href="https://github.com/adam-fowler/s3-filesystem-kit/actions?query=workflow%3ACI"><img src="https://github.com/adam-fowler/s3-filesystem-kit/workflows/CI/badge.svg" alt="CI" /></a></p>
 
 <p>File manager for Amazon Web Service S3.</p>
+<h1 id='setup' class='heading'>Setup</h1>
+
+<p>S3 File System uses the S3 library from <a href="https://github.com/swift-aws/aws-sdk-swift">aws-sdk-swift</a>. You need to initialise <code><a href="Classes/S3FileSystem.html">S3FileSystem</a></code> with a <code>S3</code> client object from this library. S3 File System will require AWS credentials before you can continue. The <code>S3</code> client object will provide these. There is a <a href="https://github.com/swift-aws/aws-sdk-swift#configuring-credentials">section</a> in the aws-sdk-swift help that gives you information on providing AWS credentials. Ensure you read this before continuing.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">s3</span> <span class="o">=</span> <span class="kt">S3</span><span class="p">(</span><span class="nv">region</span><span class="p">:</span> <span class="o">.</span><span class="n">euwest1</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">s3fs</span> <span class="o">=</span> <span class="kt">S3FileSystem</span><span class="p">(</span><span class="nv">s3Client</span><span class="p">:</span> <span class="n">s3</span><span class="p">)</span>
+</code></pre>
+<h1 id='path-descriptors' class='heading'>Path descriptors</h1>
+
+<p>S3 File System uses an <code><a href="Structs/S3File.html">S3File</a></code> to describe the location of a file in S3 and an <code><a href="Structs/S3Folder.html">S3Folder</a></code> to describe the location of a folder. These are initialized with a url of the form <code>s3://&lt;bucketname&gt;/&lt;path&gt;</code>. For example</p>
+<pre class="highlight plaintext"><code>let folder = S3Folder(url: "s3://bucket/folder")
+let file = S3File(url: "s3://bucket2/folder/file")
+</code></pre>
+
+<p>Most functions in <code><a href="Classes/S3FileSystem.html">S3FileSystem</a></code> have two forms, one that takes an <code><a href="Structs/S3File.html">S3File</a></code> and one that takes a filename String relative to the currentPath set in <code><a href="Classes/S3FileSystem.html">S3FileSystem</a></code>.</p>
+<pre class="highlight plaintext"><code>s3fs.writeFile(S3File("s3://bucket/folder/file")!, data: data)
+</code></pre>
+
+<p>and</p>
+<pre class="highlight plaintext"><code>s3fs.setCurrentFolder(S3Folder(url: "s3://bucket/folder")!)
+    .flatMap { _ in
+        return s3fs.writeFile(name: "file", data: data)
+}
+</code></pre>
+
+<p>will both do the same thing. Except in the second case <code>setCurrentFolder</code> will check the S3 bucket exists before running <code>writeFile</code>. The advantage of the second version is you can now push and pop folders (using <code>pushFolder</code> and <code>popFolder</code>) and traverse the S3 bucket as if it is a hierarchical file system. </p>
+<h1 id='asynchronous' class='heading'>Asynchronous</h1>
+
+<p>Most of the functions in <code><a href="Classes/S3FileSystem.html">S3FileSystem</a></code> return an <code>EventLoopFuture</code> from the swift-nio library. This is not the result of the function. This is populated with the result when it is available. In this manner the library will not block the main thread. It is recommended you familiarize yourself with swift-nio <a href="https://apple.github.io/swift-nio/docs/current/NIO/index.html">documention</a> to get the most out of S3 File System. </p>
+
+<p>The recommended way to interact with <code>EventLoopFutures</code> is chaining. The following creates an S3 bucket, uploads an object and then downloads it.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">S3FileSystemKit</span>
+
+<span class="k">let</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Data</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">s3fs</span><span class="o">.</span><span class="nf">setCurrentFolder</span><span class="p">(</span><span class="kt">S3Folder</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"s3://bucket/"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span> <span class="nv">createBucket</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">flatMap</span> <span class="p">{</span> <span class="n">_</span> <span class="k">in</span>
+      <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="n">s3fs</span><span class="o">.</span><span class="nf">writeFile</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="o">.</span><span class="n">flatMap</span> <span class="p">{</span> <span class="n">_</span> <span class="k">in</span>
+      <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="n">s3fs</span><span class="o">.</span><span class="nf">readFile</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="n">filename</span><span class="p">)</span>
+  <span class="p">}</span>
+</code></pre>
+<h1 id='documentation' class='heading'>Documentation</h1>
+
+<p>You can find API reference documentation <a href="https://adam-fowler.github.io/s3-filesystem-kit/index.html">here</a>. It is also useful to read the Amazon S3 documentation which you can find <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html">here</a>.</p>
 
           </section>
         </section>
