@@ -1,40 +1,40 @@
 {
   "warnings": [
     {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
+      "file": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
       "line": 11,
       "symbol": "S3FileSystemError.invalidAction",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
+      "file": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
       "line": 12,
       "symbol": "S3FileSystemError.accessDenied",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
+      "file": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
       "line": 13,
       "symbol": "S3FileSystemError.bucketDoesNotExist",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
+      "file": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
       "line": 14,
       "symbol": "S3FileSystemError.fileDoesNotExist",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
+      "file": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit/Sources/S3FileSystemKit/S3FileSystem.swift",
       "line": 15,
       "symbol": "S3FileSystemError.unexpected",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/adamfowler/Documents/dev/macOS/lib/swift-aws/s3-filesystem-kit"
+  "source_directory": "/Users/runner/runners/2.165.2/work/s3-filesystem-kit/s3-filesystem-kit"
 }
