@@ -143,6 +143,17 @@ final class S3FileSystemTests: XCTestCase {
         }
     }
 
+    func testInvalidKey() {
+        do {
+            let testData = try TestData(#function, s3fs)
+            try testData.s3fs.writeFile(name: "", data: Data("test data".utf8)).wait()
+            XCTFail("Shouldn't get here")
+        } catch S3FileSystemError.invalidInput {
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
     func testBucketDoesntExist() {
         do {
             _ = try s3fs.setCurrentFolder(S3Folder(url: "s3://s3fs-nonexistentbucket")!).wait()

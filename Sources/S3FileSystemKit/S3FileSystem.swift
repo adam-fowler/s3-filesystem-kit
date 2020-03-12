@@ -9,6 +9,7 @@ import NIO
 /// Errors returned from S3FileSystem
 public enum S3FileSystemError: Error {
     case invalidAction
+    case invalidInput
     case accessDenied
     case bucketDoesNotExist
     case fileDoesNotExist
@@ -396,6 +397,16 @@ internal extension S3FileSystem {
             return S3FileSystemError.bucketDoesNotExist
         case S3ErrorType.noSuchKey:
             return S3FileSystemError.fileDoesNotExist
+        case AWSClientError.validationError:
+            return S3FileSystemError.invalidInput
+        case let responseError as AWSResponseError:
+            switch responseError.errorCode {
+            case "InvalidBucketName":
+                return S3FileSystemError.invalidInput
+            default:
+                print("\(responseError)")
+                return S3FileSystemError.accessDenied
+            }
         default:
             print("\(error)")
             return S3FileSystemError.accessDenied
