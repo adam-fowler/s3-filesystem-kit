@@ -14,7 +14,7 @@
     <a title="WriteFileAttributes Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../../index.html"> Docs</a> (92% documented)</p>
+        <p><a href="../../index.html"> Docs</a> (93% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -32,6 +32,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../../Classes/S3FileSystem.html">S3FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/S3FileSystem/CreateBucketAttributes.html">– CreateBucketAttributes</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Classes/S3FileSystem/WriteFileAttributes.html">– WriteFileAttributes</a>
@@ -89,6 +92,33 @@
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C05WriteB10AttributesV3acl0A0AGV15ObjectCannedACLOSgvp"></a>
+                    <a name="//apple_ref/swift/Property/acl" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C05WriteB10AttributesV3acl0A0AGV15ObjectCannedACLOSgvp">acl</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>access control, read/write control per file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">acl</span><span class="p">:</span> <span class="kt">S3</span><span class="o">.</span><span class="kt">ObjectCannedACL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -173,9 +203,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:15S3FileSystemKit0abC0C05WriteB10AttributesV15contentEncoding0G4Type4tagsAESSSg_AISDyS2SGSgtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(contentEncoding:contentType:tags:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:15S3FileSystemKit0abC0C05WriteB10AttributesV15contentEncoding0G4Type4tagsAESSSg_AISDyS2SGSgtcfc">init(contentEncoding:contentType:tags:)</a>
+                    <a name="/s:15S3FileSystemKit0abC0C05WriteB10AttributesV3acl15contentEncoding0H4Type4tagsAE0A0AJV15ObjectCannedACLOSg_SSSgAOSDyS2SGSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(acl:contentEncoding:contentType:tags:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C05WriteB10AttributesV3acl15contentEncoding0H4Type4tagsAE0A0AJV15ObjectCannedACLOSg_SSSgAOSDyS2SGSgtcfc">init(acl:contentEncoding:contentType:tags:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -190,7 +220,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">contentEncoding</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">contentType</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">tags</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">acl</span><span class="p">:</span> <span class="kt">S3</span><span class="o">.</span><span class="kt">ObjectCannedACL</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">contentEncoding</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">contentType</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">tags</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -202,7 +232,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-11)</p>
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

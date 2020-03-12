@@ -14,7 +14,7 @@
     <a title="S3FileSystem Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (92% documented)</p>
+        <p><a href="../index.html"> Docs</a> (93% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -32,6 +32,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Classes/S3FileSystem.html">S3FileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/S3FileSystem/CreateBucketAttributes.html">– CreateBucketAttributes</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/S3FileSystem/WriteFileAttributes.html">– WriteFileAttributes</a>
@@ -89,6 +92,34 @@
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C22CreateBucketAttributesV"></a>
+                    <a name="//apple_ref/swift/Struct/CreateBucketAttributes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C22CreateBucketAttributesV">CreateBucketAttributes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Attributes that can be set at point bucket is created</p>
+
+                        <a href="../Classes/S3FileSystem/CreateBucketAttributes.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CreateBucketAttributes</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -1046,6 +1077,330 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03getB7Tagging4name3NIO15EventLoopFutureCySDyS2SGGSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/getFileTagging(name:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03getB7Tagging4name3NIO15EventLoopFutureCySDyS2SGGSS_tF">getFileTagging(name:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return tags for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getFileTagging</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>name of file in current folder</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03getB7Taggingy3NIO15EventLoopFutureCySDyS2SGGAA0aB0VF"></a>
+                    <a name="//apple_ref/swift/Method/getFileTagging(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03getB7Taggingy3NIO15EventLoopFutureCySDyS2SGGAA0aB0VF">getFileTagging(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return tags for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getFileTagging</span><span class="p">(</span><span class="n">_</span> <span class="nv">file</span><span class="p">:</span> <span class="kt"><a href="../Structs/S3File.html">S3File</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>s3 file descriptor</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03setB7Tagging4name4tags3NIO15EventLoopFutureCyytGSS_SDyS2SGtF"></a>
+                    <a name="//apple_ref/swift/Method/setFileTagging(name:tags:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03setB7Tagging4name4tags3NIO15EventLoopFutureCyytGSS_SDyS2SGtF">setFileTagging(name:tags:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set tags for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setFileTagging</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tags</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>name of file in current folder</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tags</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>dictionary of tags and values</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03setB7Tagging_4tags3NIO15EventLoopFutureCyytGAA0aB0V_SDyS2SGtF"></a>
+                    <a name="//apple_ref/swift/Method/setFileTagging(_:tags:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03setB7Tagging_4tags3NIO15EventLoopFutureCyytGAA0aB0V_SDyS2SGtF">setFileTagging(_:tags:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set tags for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setFileTagging</span><span class="p">(</span><span class="n">_</span> <span class="nv">file</span><span class="p">:</span> <span class="kt"><a href="../Structs/S3File.html">S3File</a></span><span class="p">,</span> <span class="nv">tags</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>s3 file descriptor</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tags</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>dictionary of tags and values</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03setB3ACL4name3acl3NIO15EventLoopFutureCyytGSS_0A0AKV012ObjectCannedF0OtF"></a>
+                    <a name="//apple_ref/swift/Method/setFileACL(name:acl:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03setB3ACL4name3acl3NIO15EventLoopFutureCyytGSS_0A0AKV012ObjectCannedF0OtF">setFileACL(name:acl:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set access control for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setFileACL</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">acl</span><span class="p">:</span> <span class="kt">S3</span><span class="o">.</span><span class="kt">ObjectCannedACL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>name of file in current folder</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>acl</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Access control for file</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C03setB3ACL_3acl3NIO15EventLoopFutureCyytGAA0aB0V_0A0ALV012ObjectCannedF0OtF"></a>
+                    <a name="//apple_ref/swift/Method/setFileACL(_:acl:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C03setB3ACL_3acl3NIO15EventLoopFutureCyytGAA0aB0V_0A0ALV012ObjectCannedF0OtF">setFileACL(_:acl:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set access control for file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setFileACL</span><span class="p">(</span><span class="n">_</span> <span class="nv">file</span><span class="p">:</span> <span class="kt"><a href="../Structs/S3File.html">S3File</a></span><span class="p">,</span> <span class="nv">acl</span><span class="p">:</span> <span class="kt">S3</span><span class="o">.</span><span class="kt">ObjectCannedACL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>s3 file descriptor</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tags</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Access control for file</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:15S3FileSystemKit0abC0C11listBuckets3NIO15EventLoopFutureCySayAA0A6FolderVGGyF"></a>
                     <a name="//apple_ref/swift/Method/listBuckets()" class="dashAnchor"></a>
                     <a class="token" href="#/s:15S3FileSystemKit0abC0C11listBuckets3NIO15EventLoopFutureCySayAA0A6FolderVGGyF">listBuckets()</a>
@@ -1119,9 +1474,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:15S3FileSystemKit0abC0C12createBucket10bucketName3NIO15EventLoopFutureCyytGSS_tF"></a>
-                    <a name="//apple_ref/swift/Method/createBucket(bucketName:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:15S3FileSystemKit0abC0C12createBucket10bucketName3NIO15EventLoopFutureCyytGSS_tF">createBucket(bucketName:)</a>
+                    <a name="/s:15S3FileSystemKit0abC0C12createBucket10bucketName10attributes3NIO15EventLoopFutureCyytGSS_AC06CreateF10AttributesVSgtF"></a>
+                    <a name="//apple_ref/swift/Method/createBucket(bucketName:attributes:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C12createBucket10bucketName10attributes3NIO15EventLoopFutureCyytGSS_AC06CreateF10AttributesVSgtF">createBucket(bucketName:attributes:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1136,7 +1491,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createBucket</span><span class="p">(</span><span class="nv">bucketName</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createBucket</span><span class="p">(</span><span class="nv">bucketName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">attributes</span><span class="p">:</span> <span class="kt"><a href="../Classes/S3FileSystem/CreateBucketAttributes.html">CreateBucketAttributes</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Void</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -1213,7 +1568,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-11)</p>
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
