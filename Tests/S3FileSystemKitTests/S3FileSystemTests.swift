@@ -1,6 +1,7 @@
 import XCTest
 import Foundation
 import NIO
+import NIOHTTP1
 import S3
 @testable import S3FileSystemKit
 
@@ -19,6 +20,11 @@ final class S3FileSystemTests: XCTestCase {
                 .flatMapErrorThrowing { _ in return }
                 .flatMap { _ in s3fs.setCurrentFolder(S3Folder(url: "s3://\(self.bucket)")!) }
                 .wait()
+        }
+
+        init(bucket: String, s3fs: S3FileSystem) {
+            self.bucket = bucket
+            self.s3fs = s3fs
         }
         
         deinit {
@@ -281,6 +287,54 @@ final class S3FileSystemTests: XCTestCase {
         }
     }
     
+    func testObjectACL() {
+        let s3Unsigned = S3(accessKeyId: "", secretAccessKey: "", region: .euwest1, endpoint: s3.client.endpoint)
+        let s3fsUnsigned = S3FileSystem(s3Unsigned)
+
+        do {
+            let testData = try TestData(#function, s3fs)
+
+            let data = Data("Test string".utf8)
+            try s3fs.writeFile(name: "testFile.txt", data: data, attributes: .init(acl: .publicRead)).wait()
+
+            let result = try s3fsUnsigned.readFile(S3File(url: "s3://\(testData.bucket)/testFile.txt")!).wait()
+            
+            XCTAssertEqual(result, data)
+
+            try s3fs.setFileACL(name: "testFile.txt", acl: .private).wait()
+
+            do {
+                _ = try s3fsUnsigned.readFile(S3File(url: "s3://\(testData.bucket)/testFile.txt")!).wait()
+                XCTFail("Shouldnt get here")
+            } catch S3FileSystemError.accessDenied {
+            }
+
+        } catch {
+            XCTFail("\(error)")
+        }
+
+    }
+    
+    func testObjectTagging() {
+        do {
+            let testData = try TestData(#function, s3fs)
+
+            let data = Data("Test string".utf8)
+            try s3fs.writeFile(name: "testFile.txt", data: data, attributes: .init(tags: ["test": "testValue"])).wait()
+            
+            let tags = try s3fs.getFileTagging(name: "testFile.txt").wait()
+            XCTAssertEqual(tags["test"], "testValue")
+            
+            try s3fs.setFileTagging(name: "testFile.txt", tags: ["test2": "testValue2"]).wait()
+            
+            let tags2 = try s3fs.getFileTagging(S3File(url: "s3://\(testData.bucket)/testFile.txt")!).wait()
+            XCTAssertEqual(tags2["test2"], "testValue2")
+        } catch {
+            XCTFail("\(error)")
+        }
+
+    }
+
     static var allTests = [
         ("testS3Folder", testS3Folder),
         ("testS3File", testS3File),
@@ -298,5 +352,7 @@ final class S3FileSystemTests: XCTestCase {
         ("testFileAttributes", testFileAttributes),
         ("testListFiles", testListFiles),
         ("testCopyFiles", testCopyFiles),
+        ("testObjectACL", testObjectACL),
+        ("testObjectTagging", testObjectTagging)
     ]
 }

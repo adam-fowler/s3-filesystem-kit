@@ -18,8 +18,21 @@ public enum S3FileSystemError: Error {
 /// S3 file system object. Contains S3 access functions
 public class S3FileSystem {
     
+    /// Attributes that can be set at point bucket is created
+    public struct CreateBucketAttributes {
+        /// access control. Read allows list access, write allows write objects
+        public let acl: S3.BucketCannedACL?
+        
+        /// initializer
+        public init(acl: S3.BucketCannedACL? = nil) {
+            self.acl = acl
+        }
+    }
+    
     /// Attributes that can be set at point file is written
     public struct WriteFileAttributes {
+        /// access control, read/write control per file
+        public let acl: S3.ObjectCannedACL?
         /// Specifies what content encodings have been applied to the object
         public let contentEncoding: String?
         /// A standard MIME type describing the format of the contents
@@ -28,7 +41,8 @@ public class S3FileSystem {
         public let tags: [String: String]?
         
         /// initializer
-        public init(contentEncoding: String? = nil, contentType: String? = nil, tags: [String: String]? = nil) {
+        public init(acl: S3.ObjectCannedACL? = nil, contentEncoding: String? = nil, contentType: String? = nil, tags: [String: String]? = nil) {
+            self.acl = acl
             self.contentEncoding = contentEncoding
             self.contentType = contentType
             self.tags = tags
@@ -180,6 +194,7 @@ public class S3FileSystem {
     ///   - data: data to be written to file
     public func writeFile(_ file: S3File, data: Data, attributes: WriteFileAttributes? = nil) -> EventLoopFuture<Void> {
         let request = S3.PutObjectRequest(
+            acl: attributes?.acl,
             body: data,
             bucket: file.bucket,
             contentEncoding: attributes?.contentEncoding,
@@ -259,6 +274,60 @@ public class S3FileSystem {
         }
 
     }
+    
+    /// Return tags for file
+    /// - Parameter name: name of file in current folder
+    public func getFileTagging(name: String) -> EventLoopFuture<[String: String]> {
+        guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return getFileTagging(file)
+    }
+
+    /// Return tags for file
+    /// - Parameter file: s3 file descriptor
+    public func getFileTagging(_ file: S3File) -> EventLoopFuture<[String: String]> {
+        let request = S3.GetObjectTaggingRequest(bucket: file.bucket, key: file.path)
+        return s3.getObjectTagging(request)
+            .map { response in
+                return .init(uniqueKeysWithValues: response.tagSet.map { return ($0.key, $0.value)})
+        }
+    }
+    
+    /// Set tags for file
+    /// - Parameters:
+    ///   - name: name of file in current folder
+    ///   - tags: dictionary of tags and values
+    public func setFileTagging(name: String, tags: [String: String]) -> EventLoopFuture<Void> {
+        guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return setFileTagging(file, tags: tags)
+    }
+
+    /// Set tags for file
+    /// - Parameters:
+    ///   - file: s3 file descriptor
+    ///   - tags: dictionary of tags and values
+    public func setFileTagging(_ file: S3File, tags: [String: String]) -> EventLoopFuture<Void> {
+        let tags = tags.map { S3.Tag(key: $0.key, value: $0.value) }
+        let request = S3.PutObjectTaggingRequest(bucket: file.bucket, key: file.path, tagging: S3.Tagging(tagSet: tags))
+        return s3.putObjectTagging(request).map { _ in return }
+    }
+
+    /// Set access control for file
+    /// - Parameters:
+    ///   - name: name of file in current folder
+    ///   - acl: Access control for file
+    public func setFileACL(name: String, acl: S3.ObjectCannedACL) -> EventLoopFuture<Void> {
+        guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return setFileACL(file, acl: acl)
+    }
+
+    /// Set access control for file
+    /// - Parameters:
+    ///   - file: s3 file descriptor
+    ///   - tags: Access control for file
+    public func setFileACL(_ file: S3File, acl: S3.ObjectCannedACL) -> EventLoopFuture<Void> {
+        let request = S3.PutObjectAclRequest(acl: acl, bucket: file.bucket, key: file.path)
+        return s3.putObjectAcl(request).map { _ in return }
+    }
 
     /// Return a list of S3 buckets as S3Folders
     public func listBuckets() -> EventLoopFuture<[S3Folder]> {
@@ -284,8 +353,8 @@ public class S3FileSystem {
     
     /// Create an S3 bucket
     /// - Parameter bucketName: name of bucket
-    public func createBucket(bucketName: String) -> EventLoopFuture<Void> {
-        let request = S3.CreateBucketRequest(bucket: bucketName)
+    public func createBucket(bucketName: String, attributes: CreateBucketAttributes? = nil) -> EventLoopFuture<Void> {
+        let request = S3.CreateBucketRequest(acl: attributes?.acl, bucket: bucketName)
         return s3.createBucket(request)
             .map { _ in return }
             .flatMapErrorThrowing { error in
