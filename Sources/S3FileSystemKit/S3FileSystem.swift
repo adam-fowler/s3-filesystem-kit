@@ -13,6 +13,7 @@ public enum S3FileSystemError: Error {
     case accessDenied
     case bucketDoesNotExist
     case fileDoesNotExist
+    case invalidURL
     case unexpected
 }
 
@@ -180,6 +181,22 @@ public class S3FileSystem {
         }
     }
     
+    /// Return a signed url for reading a file
+    /// - Parameter name: name of file in current folder
+    public func readFileURL(name: String, expires: Int =  86400) -> EventLoopFuture<URL> {
+        guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return readFileURL(file, expires: expires)
+    }
+    
+    /// Return a signed url for reading a file
+    /// - Parameters:
+    ///   - file: s3 file descriptor
+    ///   - expires: For how long url will be valid in seconds
+    public func readFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
+        return s3.client.eventLoopGroup.next().makeSucceededFuture(s3.client.signURL(url: url, httpMethod: "GET", expires: expires))
+    }
+
     /// Write data to file
     /// - Parameters:
     ///   - name: file name in current folder
@@ -210,6 +227,22 @@ public class S3FileSystem {
         }
     }
     
+    /// Return a signed url for writing a file
+    /// - Parameter name: name of file in current folder
+    public func writeFileURL(name: String, expires: Int =  86400) -> EventLoopFuture<URL> {
+        guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
+        return writeFileURL(file, expires: expires)
+    }
+    
+    /// Return a signed url for writing a file
+    /// - Parameters:
+    ///   - file: s3 file descriptor
+    ///   - expires: For how long url will be valid in seconds
+    public func writeFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
+        return s3.client.eventLoopGroup.next().makeSucceededFuture(s3.client.signURL(url: url, httpMethod: "PUT", expires: expires))
+    }
+
     /// Delete file
     /// - Parameter name: file name in current folder
     public func deleteFile(name: String) -> EventLoopFuture<Void> {
