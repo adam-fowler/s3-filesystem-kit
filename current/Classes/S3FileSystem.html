@@ -14,7 +14,7 @@
     <a title="S3FileSystem Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (93% documented)</p>
+        <p><a href="../index.html"> Docs</a> (91% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -661,6 +661,110 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:15S3FileSystemKit0abC0C04readB3URL4name7expires3NIO15EventLoopFutureCy10Foundation0F0VGSS_SitF"></a>
+                    <a name="//apple_ref/swift/Method/readFileURL(name:expires:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C04readB3URL4name7expires3NIO15EventLoopFutureCy10Foundation0F0VGSS_SitF">readFileURL(name:expires:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return a signed url for reading a file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readFileURL</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">expires</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">86400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">URL</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>name of file in current folder</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C04readB3URL_7expires3NIO15EventLoopFutureCy10Foundation0F0VGAA0aB0V_SitF"></a>
+                    <a name="//apple_ref/swift/Method/readFileURL(_:expires:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C04readB3URL_7expires3NIO15EventLoopFutureCy10Foundation0F0VGAA0aB0V_SitF">readFileURL(_:expires:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return a signed url for reading a file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readFileURL</span><span class="p">(</span><span class="n">_</span> <span class="nv">file</span><span class="p">:</span> <span class="kt"><a href="../Structs/S3File.html">S3File</a></span><span class="p">,</span> <span class="nv">expires</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">86400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">URL</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>s3 file descriptor</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>expires</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>For how long url will be valid in seconds</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:15S3FileSystemKit0abC0C05writeB04name4data10attributes3NIO15EventLoopFutureCyytGSS_10Foundation4DataVAC05WriteB10AttributesVSgtF"></a>
                     <a name="//apple_ref/swift/Method/writeFile(name:data:attributes:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:15S3FileSystemKit0abC0C05writeB04name4data10attributes3NIO15EventLoopFutureCyytGSS_10Foundation4DataVAC05WriteB10AttributesVSgtF">writeFile(name:data:attributes:)</a>
@@ -765,6 +869,110 @@
                               <td>
                                 <div>
                                   <p>data to be written to file</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C05writeB3URL4name7expires3NIO15EventLoopFutureCy10Foundation0F0VGSS_SitF"></a>
+                    <a name="//apple_ref/swift/Method/writeFileURL(name:expires:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C05writeB3URL4name7expires3NIO15EventLoopFutureCy10Foundation0F0VGSS_SitF">writeFileURL(name:expires:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return a signed url for writing a file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">writeFileURL</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">expires</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">86400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">URL</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>name of file in current folder</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15S3FileSystemKit0abC0C05writeB3URL_7expires3NIO15EventLoopFutureCy10Foundation0F0VGAA0aB0V_SitF"></a>
+                    <a name="//apple_ref/swift/Method/writeFileURL(_:expires:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15S3FileSystemKit0abC0C05writeB3URL_7expires3NIO15EventLoopFutureCy10Foundation0F0VGAA0aB0V_SitF">writeFileURL(_:expires:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return a signed url for writing a file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">writeFileURL</span><span class="p">(</span><span class="n">_</span> <span class="nv">file</span><span class="p">:</span> <span class="kt"><a href="../Structs/S3File.html">S3File</a></span><span class="p">,</span> <span class="nv">expires</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">86400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">URL</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>file</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>s3 file descriptor</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>expires</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>For how long url will be valid in seconds</p>
                                 </div>
                               </td>
                             </tr>
@@ -1568,7 +1776,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-12)</p>
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-03-24)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
