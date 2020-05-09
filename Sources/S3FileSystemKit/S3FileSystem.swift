@@ -169,7 +169,7 @@ public class S3FileSystem {
         return s3.getObject(request)
             .flatMapThrowing { response in
                 guard let body = response.body else { throw S3FileSystemError.unexpected}
-                return body
+                return body.asData() ?? Data()
             }
             .flatMapErrorThrowing { error in
                 switch error {
@@ -213,7 +213,7 @@ public class S3FileSystem {
     public func writeFile(_ file: S3File, data: Data, attributes: WriteFileAttributes? = nil) -> EventLoopFuture<Void> {
         let request = S3.PutObjectRequest(
             acl: attributes?.acl,
-            body: data,
+            body: .data(data),
             bucket: file.bucket,
             contentEncoding: attributes?.contentEncoding,
             contentType: attributes?.contentType,
