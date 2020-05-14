@@ -430,7 +430,7 @@ internal extension S3FileSystem {
             return S3FileSystemError.bucketDoesNotExist
         case S3ErrorType.noSuchKey:
             return S3FileSystemError.fileDoesNotExist
-        case AWSClientError.validationError:
+        case let error as AWSClientError where error == .validationError:
             return S3FileSystemError.invalidInput
         case let responseError as AWSResponseError:
             switch responseError.errorCode {
