@@ -193,8 +193,8 @@ public class S3FileSystem {
     ///   - file: s3 file descriptor
     ///   - expires: For how long url will be valid in seconds
     public func readFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
-        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
-        return s3.client.signURL(url: url, httpMethod: "GET", expires: expires)
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.serviceConfig.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
+        return s3.client.signURL(url: url, httpMethod: "GET", expires: expires, serviceConfig: s3.serviceConfig)
     }
 
     /// Write data to file
@@ -239,8 +239,8 @@ public class S3FileSystem {
     ///   - file: s3 file descriptor
     ///   - expires: For how long url will be valid in seconds
     public func writeFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
-        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
-        return s3.client.signURL(url: url, httpMethod: "PUT", expires: expires)
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.serviceConfig.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
+        return s3.client.signURL(url: url, httpMethod: "PUT", expires: expires, serviceConfig: s3.serviceConfig)
     }
 
     /// Delete file

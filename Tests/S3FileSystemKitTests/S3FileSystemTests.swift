@@ -6,6 +6,7 @@ import AWSS3
 @testable import S3FileSystemKit
 
 final class S3FileSystemTests: XCTestCase {
+    var client: AWSClient!
     var s3: S3!
     var s3fs: S3FileSystem!
 
@@ -40,14 +41,17 @@ final class S3FileSystemTests: XCTestCase {
     }
 
     override func setUp() {
+        client = AWSClient(credentialProvider: .static(accessKeyId: "key", secretAccessKey: "secret"), httpClientProvider: .createNew)
         s3 = S3(
-            accessKeyId: "key",
-            secretAccessKey: "secret",
+            client: client,
             region: .euwest1,
             endpoint: ProcessInfo.processInfo.environment["S3_ENDPOINT"] ?? "http://localhost:4566"
         )
-        //s3 = S3(region: .euwest1)
         s3fs = S3FileSystem(s3)
+    }
+
+    override func tearDown() {
+        XCTAssertNoThrow(try client.syncShutdown())
     }
 
     func testS3Folder() {
@@ -301,7 +305,10 @@ final class S3FileSystemTests: XCTestCase {
     func testObjectACL() {
         // doesn't work using Localstack
 
-        /*let s3Unsigned = S3(accessKeyId: "", secretAccessKey: "", region: .euwest1, endpoint: s3.client.endpoint)
+        /*
+        let client = AWSClient(credentialProvider: .empty, httpClientProvider: .createNew)
+        defer { XCTAssertNoThrow(try client.syncShutdown()) }
+        let s3Unsigned = S3(client: client, region: .euwest1, endpoint: s3.serviceConfig.endpoint)
         let s3fsUnsigned = S3FileSystem(s3Unsigned)
 
         do {
