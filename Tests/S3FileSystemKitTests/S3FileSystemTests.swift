@@ -2,7 +2,7 @@ import XCTest
 import Foundation
 import NIO
 import NIOHTTP1
-import AWSS3
+import SotoS3
 @testable import S3FileSystemKit
 
 final class S3FileSystemTests: XCTestCase {
@@ -308,7 +308,7 @@ final class S3FileSystemTests: XCTestCase {
         /*
         let client = AWSClient(credentialProvider: .empty, httpClientProvider: .createNew)
         defer { XCTAssertNoThrow(try client.syncShutdown()) }
-        let s3Unsigned = S3(client: client, region: .euwest1, endpoint: s3.serviceConfig.endpoint)
+        let s3Unsigned = S3(client: client, region: .euwest1, endpoint: s3.endpoint)
         let s3fsUnsigned = S3FileSystem(s3Unsigned)
 
         do {
