@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tag: ['5.1', '5.2']
+        tag: ['5.1', '5.2', '5.3']
     services:
       localstack:
         image: localstack/localstack
@@ -37,10 +37,10 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update -qq
-        apt-get install -q -y tzdata libssl-dev zlib1g-dev
+        apt-get install -q -y tzdata zlib1g-dev
     - name: Print endpoints
       run: |
-        echo "S3        : ${S3_ENDPOINT}"
+        echo "S3 : ${S3_ENDPOINT}"
     - name: Checkout
       uses: actions/checkout@v1
       with:

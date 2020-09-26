@@ -303,10 +303,8 @@ final class S3FileSystemTests: XCTestCase {
     }
 
     func testObjectACL() {
-        // doesn't work using Localstack
-
-        /*
-        let client = AWSClient(credentialProvider: .empty, httpClientProvider: .createNew)
+        // ACL test doesnt work with Localstack
+        /*let client = AWSClient(credentialProvider: .empty, httpClientProvider: .createNew)
         defer { XCTAssertNoThrow(try client.syncShutdown()) }
         let s3Unsigned = S3(client: client, region: .euwest1, endpoint: s3.endpoint)
         let s3fsUnsigned = S3FileSystem(s3Unsigned)
