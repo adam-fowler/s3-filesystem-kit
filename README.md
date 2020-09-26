@@ -7,7 +7,7 @@ File manager for Amazon Web Service S3.
 
 # Setup
 
-S3 File System uses the S3 library from [Soto](https://github.com/soto-project/soto). You need to initialise `S3FileSystem` with a `S3` client object from this library. S3 File System will require AWS credentials before you can continue. The `S3` client object will provide these. There is a [section](https://github.com/swift-aws/aws-sdk-swift#configuring-credentials) in the aws-sdk-swift help that gives you information on providing AWS credentials. Ensure you read this before continuing.
+S3 File System uses the S3 library from [Soto](https://github.com/soto-project/soto). You need to initialise `S3FileSystem` with a `S3` client object from this library. S3 File System will require AWS credentials before you can continue. The `S3` client object will provide these. 
 
 ```swift
 let s3 = S3(region: .euwest1)
