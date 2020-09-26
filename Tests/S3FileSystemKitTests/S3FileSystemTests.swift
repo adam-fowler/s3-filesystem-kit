@@ -44,7 +44,7 @@ final class S3FileSystemTests: XCTestCase {
             accessKeyId: "key",
             secretAccessKey: "secret",
             region: .euwest1,
-            endpoint: ProcessInfo.processInfo.environment["S3_ENDPOINT"] ?? "http://localhost:4572"
+            endpoint: ProcessInfo.processInfo.environment["S3_ENDPOINT"] ?? "http://localhost:4566"
         )
         //s3 = S3(region: .euwest1)
         s3fs = S3FileSystem(s3)

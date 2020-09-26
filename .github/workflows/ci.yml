@@ -27,20 +27,12 @@ jobs:
     services:
       localstack:
         image: localstack/localstack
-        # ports:
-        # - 4567-4597:4567-4597
         env:
           SERVICES: 's3'
-        options: >-
-          --health-cmd "awslocal s3 ls"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --workdir /opt/code/localstack/
     container:
       image: swift:${{ matrix.tag }}
       env:
-        S3_ENDPOINT         : "http://localstack:4572"
+        S3_ENDPOINT : "http://localstack:4566"
     steps:
     - name: Install dependencies
       run: |
