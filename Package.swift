@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "S3FileSystemKit", targets: ["S3FileSystemKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-aws/aws-sdk-swift", .upToNextMajor(from: "4.4.0"))
+        .package(url: "https://github.com/soto-project/soto.git", .upToNextMajor(from: "4.4.0"))
     ],
     targets: [
         .target(name: "S3FileSystemKit", dependencies: ["S3"]),
