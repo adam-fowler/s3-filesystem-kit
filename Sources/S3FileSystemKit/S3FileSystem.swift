@@ -139,7 +139,7 @@ public class S3FileSystem {
             guard let contents = response.contents else { return [] }
             return contents.compactMap { entry in
                 guard let key = entry.key else { return nil }
-                return FileListAttributes(file: S3File(bucket: currentFolder.bucket, path: key), eTag: entry.eTag, size: entry.size, lastModified: entry.lastModified?.dateValue)
+                return FileListAttributes(file: S3File(bucket: currentFolder.bucket, path: key), eTag: entry.eTag, size: entry.size, lastModified: entry.lastModified)
             }
         }
     }
@@ -303,7 +303,7 @@ public class S3FileSystem {
                 return FileAttributes(
                     eTag: response.eTag,
                     size: response.contentLength,
-                    lastModified: response.lastModified?.dateValue,
+                    lastModified: response.lastModified,
                     contentEncoding: response.contentEncoding,
                     contentType: response.contentType)
             }
@@ -430,9 +430,9 @@ internal extension S3FileSystem {
     /// convert from aws-sdk-swift S3 error to s3-filesystem error
     func convertS3Errors(_ error: Error) -> Error {
         switch error {
-        case S3ErrorType.noSuchBucket:
+        case let error as S3ErrorType where error == .noSuchBucket:
             return S3FileSystemError.bucketDoesNotExist
-        case S3ErrorType.noSuchKey:
+        case let error as S3ErrorType where error == .noSuchKey:
             return S3FileSystemError.fileDoesNotExist
         case let error as AWSClientError where error == .validationError:
             return S3FileSystemError.invalidInput
