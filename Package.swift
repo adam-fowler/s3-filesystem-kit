@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "S3FileSystemKit", targets: ["S3FileSystemKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/soto-project/soto.git", .branch("main"))
+        .package(url: "https://github.com/soto-project/soto.git", from: "5.0.0")
     ],
     targets: [
         .target(name: "S3FileSystemKit", dependencies: ["SotoS3"]),
