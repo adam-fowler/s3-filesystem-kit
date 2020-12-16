@@ -10,10 +10,10 @@ let package = Package(
         .library(name: "S3FileSystemKit", targets: ["S3FileSystemKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/soto-project/soto.git", .upToNextMajor(from: "4.4.0"))
+        .package(url: "https://github.com/soto-project/soto.git", from: "5.0.0")
     ],
     targets: [
-        .target(name: "S3FileSystemKit", dependencies: ["S3"]),
+        .target(name: "S3FileSystemKit", dependencies: ["SotoS3"]),
         .testTarget(name: "S3FileSystemKitTests", dependencies: ["S3FileSystemKit"]),
     ]
 )

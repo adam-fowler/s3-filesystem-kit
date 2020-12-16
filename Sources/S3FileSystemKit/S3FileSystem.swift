@@ -4,7 +4,7 @@
 // date: 2020/03/08
 import Foundation
 import NIO
-@_exported import S3
+@_exported import SotoS3
 
 /// Errors returned from S3FileSystem
 public enum S3FileSystemError: Error {
@@ -139,7 +139,7 @@ public class S3FileSystem {
             guard let contents = response.contents else { return [] }
             return contents.compactMap { entry in
                 guard let key = entry.key else { return nil }
-                return FileListAttributes(file: S3File(bucket: currentFolder.bucket, path: key), eTag: entry.eTag, size: entry.size, lastModified: entry.lastModified?.dateValue)
+                return FileListAttributes(file: S3File(bucket: currentFolder.bucket, path: key), eTag: entry.eTag, size: entry.size, lastModified: entry.lastModified)
             }
         }
     }
@@ -169,7 +169,7 @@ public class S3FileSystem {
         return s3.getObject(request)
             .flatMapThrowing { response in
                 guard let body = response.body else { throw S3FileSystemError.unexpected}
-                return body
+                return body.asData() ?? Data()
             }
             .flatMapErrorThrowing { error in
                 switch error {
@@ -183,7 +183,7 @@ public class S3FileSystem {
     
     /// Return a signed url for reading a file
     /// - Parameter name: name of file in current folder
-    public func readFileURL(name: String, expires: Int =  86400) -> EventLoopFuture<URL> {
+    public func readFileURL(name: String, expires: TimeAmount) -> EventLoopFuture<URL> {
         guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
         return readFileURL(file, expires: expires)
     }
@@ -192,9 +192,11 @@ public class S3FileSystem {
     /// - Parameters:
     ///   - file: s3 file descriptor
     ///   - expires: For how long url will be valid in seconds
-    public func readFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
-        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
-        return s3.client.eventLoopGroup.next().makeSucceededFuture(s3.client.signURL(url: url, httpMethod: "GET", expires: expires))
+    public func readFileURL(_ file: S3File, expires: TimeAmount) -> EventLoopFuture<URL> {
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.region.rawValue).amazonaws.com/\(file.name)") else {
+            return s3.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)
+        }
+        return s3.signURL(url: url, httpMethod: .GET, expires: expires)
     }
 
     /// Write data to file
@@ -213,7 +215,7 @@ public class S3FileSystem {
     public func writeFile(_ file: S3File, data: Data, attributes: WriteFileAttributes? = nil) -> EventLoopFuture<Void> {
         let request = S3.PutObjectRequest(
             acl: attributes?.acl,
-            body: data,
+            body: .data(data),
             bucket: file.bucket,
             contentEncoding: attributes?.contentEncoding,
             contentType: attributes?.contentType,
@@ -229,7 +231,7 @@ public class S3FileSystem {
     
     /// Return a signed url for writing a file
     /// - Parameter name: name of file in current folder
-    public func writeFileURL(name: String, expires: Int =  86400) -> EventLoopFuture<URL> {
+    public func writeFileURL(name: String, expires: TimeAmount) -> EventLoopFuture<URL> {
         guard let file = currentFolder?.file(name) else { return makeFailedFuture(S3FileSystemError.invalidAction) }
         return writeFileURL(file, expires: expires)
     }
@@ -238,9 +240,11 @@ public class S3FileSystem {
     /// - Parameters:
     ///   - file: s3 file descriptor
     ///   - expires: For how long url will be valid in seconds
-    public func writeFileURL(_ file: S3File, expires: Int =  86400) -> EventLoopFuture<URL> {
-        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.client.region.rawValue).amazonaws.com/\(file.name)") else { return s3.client.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)}
-        return s3.client.eventLoopGroup.next().makeSucceededFuture(s3.client.signURL(url: url, httpMethod: "PUT", expires: expires))
+    public func writeFileURL(_ file: S3File, expires: TimeAmount) -> EventLoopFuture<URL> {
+        guard let url = URL(string: "https://\(file.bucket).s3.\(s3.region.rawValue).amazonaws.com/\(file.name)") else {
+            return s3.eventLoopGroup.next().makeFailedFuture(S3FileSystemError.invalidURL)
+        }
+        return s3.signURL(url: url, httpMethod: .PUT, expires: expires)
     }
 
     /// Delete file
@@ -299,7 +303,7 @@ public class S3FileSystem {
                 return FileAttributes(
                     eTag: response.eTag,
                     size: response.contentLength,
-                    lastModified: response.lastModified?.dateValue,
+                    lastModified: response.lastModified,
                     contentEncoding: response.contentEncoding,
                     contentType: response.contentType)
             }
@@ -426,11 +430,11 @@ internal extension S3FileSystem {
     /// convert from aws-sdk-swift S3 error to s3-filesystem error
     func convertS3Errors(_ error: Error) -> Error {
         switch error {
-        case S3ErrorType.noSuchBucket:
+        case let error as S3ErrorType where error == .noSuchBucket:
             return S3FileSystemError.bucketDoesNotExist
-        case S3ErrorType.noSuchKey:
+        case let error as S3ErrorType where error == .noSuchKey:
             return S3FileSystemError.fileDoesNotExist
-        case AWSClientError.validationError:
+        case let error as AWSClientError where error == .validationError:
             return S3FileSystemError.invalidInput
         case let responseError as AWSResponseError:
             switch responseError.errorCode {

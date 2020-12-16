@@ -2,17 +2,18 @@ import XCTest
 import Foundation
 import NIO
 import NIOHTTP1
-import S3
+import SotoS3
 @testable import S3FileSystemKit
 
 final class S3FileSystemTests: XCTestCase {
+    var client: AWSClient!
     var s3: S3!
     var s3fs: S3FileSystem!
-    
+
     class TestData {
         let s3fs: S3FileSystem
         let bucket: String
-        
+
         init(_ testName: String, _ s3fs: S3FileSystem) throws {
             self.s3fs = s3fs
             self.bucket = "s3fs-\(testName.lowercased().filter { return $0.isLetter })"
@@ -26,7 +27,7 @@ final class S3FileSystemTests: XCTestCase {
             self.bucket = bucket
             self.s3fs = s3fs
         }
-        
+
         deinit {
             try? s3fs.setCurrentFolder("/")
             let fileDeletion: EventLoopFuture<Void> = s3fs.listFiles(includeSubFolders: true)
@@ -38,16 +39,19 @@ final class S3FileSystemTests: XCTestCase {
             try? s3fs.deleteBucket(bucketName: bucket).wait()
         }
     }
-    
+
     override func setUp() {
+        client = AWSClient(credentialProvider: .static(accessKeyId: "key", secretAccessKey: "secret"), httpClientProvider: .createNew)
         s3 = S3(
-            accessKeyId: "key",
-            secretAccessKey: "secret",
+            client: client,
             region: .euwest1,
             endpoint: ProcessInfo.processInfo.environment["S3_ENDPOINT"] ?? "http://localhost:4566"
         )
-        //s3 = S3(region: .euwest1)
         s3fs = S3FileSystem(s3)
+    }
+
+    override func tearDown() {
+        XCTAssertNoThrow(try client.syncShutdown())
     }
 
     func testS3Folder() {
@@ -87,30 +91,30 @@ final class S3FileSystemTests: XCTestCase {
         let file = S3File(url: "s3://bucket/folder/file")
         XCTAssertEqual(file?.url, "s3://bucket/folder/file")
     }
-    
+
     func testSubFolder() {
         let folder = S3Folder(url: "s3://bucket/folder")
         let subfolder = folder?.subFolder("folder2")
         XCTAssertEqual(subfolder?.url, "s3://bucket/folder/folder2/")
     }
-    
+
     func testFileInFolder() {
         let folder = S3Folder(url: "s3://bucket/folder")
         let file = folder?.file("file")
         XCTAssertEqual(file?.url, "s3://bucket/folder/file")
     }
-    
+
     func testFileNameExtension() {
         let file = S3File(url: "s3://bucket/folder/file.txt")
         let name = file?.name
         let nameWithoutExtension = file?.nameWithoutExtension
         let `extension` = file?.extension
-        
+
         XCTAssertEqual(name, "file.txt")
         XCTAssertEqual(nameWithoutExtension, "file")
         XCTAssertEqual(`extension`, "txt")
     }
-    
+
     func testPushPopFolder() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -123,7 +127,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testBucketCreateExistsDelete() {
         do {
             let bucketName = "s3fs-\(#function.lowercased().filter { return $0.isLetter })"
@@ -153,7 +157,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testBucketDoesntExist() {
         do {
             _ = try s3fs.setCurrentFolder(S3Folder(url: "s3://s3fs-nonexistentbucket")!).wait()
@@ -163,7 +167,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testBucketDoesntExist2() {
         do {
             _ = try s3fs.readFile(S3File(url: "s3://s3fs-nonexistentbucket/test")!).wait()
@@ -173,7 +177,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testListBuckets() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -183,7 +187,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testWriteReadFile() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -201,7 +205,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testFileSize() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -218,7 +222,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testFileAttributes() {
         do {
             let testData = try TestData(#function, s3fs)
@@ -235,7 +239,7 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func createFiles(name: String, number: Int) -> EventLoopFuture<Void> {
         var responses : [EventLoopFuture<Void>] = []
         for i in 0..<number {
@@ -247,11 +251,11 @@ final class S3FileSystemTests: XCTestCase {
 
         return EventLoopFuture.whenAllComplete(responses, on: s3.client.eventLoopGroup.next()).map { _ in return }
     }
-    
+
     func testListFiles() {
         do {
             let testData = try TestData(#function, s3fs)
-            
+
             try s3fs.setCurrentFolder(S3Folder(url: "s3://\(testData.bucket)")!).wait()
             _ = try createFiles(name: "test-", number: 6).wait()
             try s3fs.pushFolder("folder")
@@ -263,10 +267,10 @@ final class S3FileSystemTests: XCTestCase {
 
             let list = try s3fs.listFiles().wait()
             XCTAssertEqual(list.count, 6)
-            
+
             let folders = try s3fs.listSubfolders().wait()
             XCTAssertEqual(folders.count, 2)
-            
+
             try s3fs.pushFolder("folder")
             let list2 = try s3fs.listFiles().wait()
             XCTAssertEqual(list2.count, 5)
@@ -279,29 +283,30 @@ final class S3FileSystemTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func testCopyFiles() {
         do {
             let testData = try TestData(#function, s3fs)
 
             let from = S3File(url: "s3://\(testData.bucket)/folder1/testObject.txt")!
             let to = S3File(url: "s3://\(testData.bucket)/folder2/testObject.txt")!
-            
+
             let data = Data("Test string".utf8)
             try s3fs.writeFile(from, data: data).wait()
             try s3fs.copyFile(from: from, to: to).wait()
             let data2 = try s3fs.readFile(to).wait()
-            
+
             XCTAssertEqual(data, data2)
         } catch {
             XCTFail("\(error)")
         }
     }
-    
-    func testObjectACL() {
-        // doesn't work using Localstack
 
-        /*let s3Unsigned = S3(accessKeyId: "", secretAccessKey: "", region: .euwest1, endpoint: s3.client.endpoint)
+    func testObjectACL() {
+        // ACL test doesnt work with Localstack
+        /*let client = AWSClient(credentialProvider: .empty, httpClientProvider: .createNew)
+        defer { XCTAssertNoThrow(try client.syncShutdown()) }
+        let s3Unsigned = S3(client: client, region: .euwest1, endpoint: s3.endpoint)
         let s3fsUnsigned = S3FileSystem(s3Unsigned)
 
         do {
@@ -311,7 +316,7 @@ final class S3FileSystemTests: XCTestCase {
             try s3fs.writeFile(name: "testFile.txt", data: data, attributes: .init(acl: .publicRead)).wait()
 
             let result = try s3fsUnsigned.readFile(S3File(url: "s3://\(testData.bucket)/testFile.txt")!).wait()
-            
+
             XCTAssertEqual(result, data)
 
             try s3fs.setFileACL(name: "testFile.txt", acl: .private).wait()
@@ -327,19 +332,19 @@ final class S3FileSystemTests: XCTestCase {
         }*/
 
     }
-    
+
     func testObjectTagging() {
         do {
             let testData = try TestData(#function, s3fs)
 
             let data = Data("Test string".utf8)
             try s3fs.writeFile(name: "testFile.txt", data: data, attributes: .init(tags: ["test": "testValue"])).wait()
-            
+
             let tags = try s3fs.getFileTagging(name: "testFile.txt").wait()
             XCTAssertEqual(tags["test"], "testValue")
-            
+
             try s3fs.setFileTagging(name: "testFile.txt", tags: ["test2": "testValue2"]).wait()
-            
+
             let tags2 = try s3fs.getFileTagging(S3File(url: "s3://\(testData.bucket)/testFile.txt")!).wait()
             XCTAssertEqual(tags2["test2"], "testValue2")
         } catch {
